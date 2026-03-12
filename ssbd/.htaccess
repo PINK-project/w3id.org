@@ -1,0 +1,218 @@
+##########################################################################
+# .htaccess file https://w3id.org/ssbd
+#
+# If testing interactively with https://htaccess.madewithlove.com/
+# remember to remove the initial "ssbd/" in the URL to test.
+#
+##########################################################################
+
+Options +FollowSymLinks
+
+# Rewrite engine setup
+RewriteEngine On
+
+
+##########################################################################
+##  Redirections to raw files in the GitHub repo
+##########################################################################
+
+# Source: https://w3id.org/ssbd/raw/{VERSION}/{PATH}
+# Target: https://github.com/PINK-project/PINK-annotation-schema/{VERSION}/{PATH}
+RewriteRule ^raw/([0-9][^/]*)/(.*)$ https://github.com/PINK-project/PINK-annotation-schema/$1/$2 [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/raw/{PATH}
+# Target: https://github.com/PINK-project/PINK-annotation-schema/{PATH}
+RewriteRule ^raw/(.*)$ https://github.com/PINK-project/PINK-annotation-schema/main/$1 [R=303,NE,L]
+
+
+
+##########################################################################
+##  Redirections for domain and application ontologies
+##########################################################################
+
+## Redirections to GitHub Pages, with version
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/{VERSION}
+# Target from browser: https://pink-project.github.io/domain-{DOMAIN}/versions/{VERSION}/{DOMAIN}.html
+# Target, otherwise:   https://pink-project.github.io/domain-{DOMAIN}/versions/{VERSION}/{DOMAIN}.ttl
+RewriteCond %{HTTP_ACCEPT} text/html
+RewriteRule ^domain/(domain-)?([^/]+)/([0-9][^/]*)/?$ https://pink-project.github.io/domain-$2/versions/$3/$2.html [R=303,NE,L]
+RewriteRule ^domain/(domain-)?([^/]+)/([0-9][^/]*)/?$ https://pink-project.github.io/domain-$2/versions/$3/$2.ttl [R=303,NE,L]
+RewriteCond %{HTTP_ACCEPT} text/html
+RewriteRule ^application/(application-)?([^/]+)/([0-9][^/]*)/?$ https://pink-project.github.io/application-$2/versions/$3/$2.html [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/([0-9][^/]*)/?$ https://pink-project.github.io/application-$2/versions/$3/$2.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/{VERSION}/turtle
+# Target: https://pink-project.github.io/domain-{DOMAIN}/versions/{VERSION}/{DOMAIN}.ttl
+RewriteRule ^domain/(domain-)?([^/]+)/([0-9][^/]*)/turtle/?$           https://pink-project.github.io/domain-$2/versions/$3/$2.ttl [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/([0-9][^/]*)/turtle/?$ https://pink-project.github.io/application-$2/versions/$3/$2.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/{VERSION}/context
+# Target: https://pink-project.github.io/domain-{DOMAIN}/versions/{VERSION}/context/context.json
+RewriteRule ^domain/(domain-)?([^/]+)/([0-9][^/]*)/context/?$           https://pink-project.github.io/domain-$2/versions/$3/context/context.json [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/([0-9][^/]*)/context/?$ https://pink-project.github.io/application-$2/versions/$3/context/context.json [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/{VERSION}/context/{CONTEXTNAME}
+# Target: https://pink-project.github.io/domain-{DOMAIN}/versions/{VERSION}/context/{CONTEXTNAME}.json
+RewriteRule ^domain/(domain-)?([^/]+)/([0-9][^/]*)/context/([^/]+)/?$           https://pink-project.github.io/domain-$2/versions/$3/context/$4.json [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/([0-9][^/]*)/context/([^/]+)/?$ https://pink-project.github.io/application-$2/versions/$3/context/$4.json [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/{VERSION}/inferred
+# Target: https://pink-project.github.io/domain-{DOMAIN}/versions/{VERSION}/{DOMAIN}-inferred.ttl
+RewriteRule ^domain/(domain-)?([^/]+)/([0-9][^/]*)/inferred/?$           https://pink-project.github.io/domain-$2/versions/$3/$2-inferred.ttl [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/([0-9][^/]*)/inferred/?$ https://pink-project.github.io/application-$2/versions/$3/$2-inferred.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/{VERSION}/dependencies
+# Target: https://pink-project.github.io/domain-{DOMAIN}/versions/{VERSION}/{DOMAIN}-dependencies.ttl
+RewriteRule ^domain/(domain-)?([^/]+)/([0-9][^/]*)/dependencies/?$           https://pink-project.github.io/domain-$2/versions/$3/$2-dependencies.ttl [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/([0-9][^/]*)/dependencies/?$ https://pink-project.github.io/application-$2/versions/$3/$2-dependencies.ttl [R=303,NE,L]
+
+## Redirections to GitHub repo, with version
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/{VERSION}/source
+# Target: https://github.com/PINK-project/domain-{DOMAIN}/{VERSION}/{DOMAIN}.ttl
+RewriteRule ^domain/(domain-)?([^/]+)/([0-9][^/]*)/source/?$           https://raw.githubusercontent.com/pink-project/domain-$2/$3/$2.ttl [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/([0-9][^/]*)/source/?$ https://raw.githubusercontent.com/pink-project/application-$2/$3/$2.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/{VERSION}/{PATH}/{MODULE}
+# Target: https://github.com/PINK-project/domain-{DOMAIN}/{VERSION}/{PATH}/{MODULE}
+RewriteRule ^domain/(domain-)?([^/]+)/([0-9][^/]*)/([^0-9].*[^/])/?$           https://raw.githubusercontent.com/pink-project/domain-$2/$3/$4.ttl [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/([0-9][^/]*)/([^0-9].*[^/])/?$ https://raw.githubusercontent.com/pink-project/application-$2/$3/$4.ttl [R=303,NE,L]
+
+## Redirections to GitHub Pages, without version
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}
+# Target from browser: https://pink-project.github.io/domain-{DOMAIN}/{DOMAIN}.html
+# Target, otherwise:   https://pink-project.github.io/domain-{DOMAIN}/{DOMAIN}.ttl
+RewriteCond %{HTTP_ACCEPT} text/html
+RewriteRule ^domain/(domain-)?([^/]+)/?$ https://pink-project.github.io/domain-$2/$2.html [R=303,NE,L]
+RewriteRule ^domain/(domain-)?([^/]+)/?$ https://pink-project.github.io/domain-$2/$2.ttl [R=303,NE,L]
+RewriteCond %{HTTP_ACCEPT} text/html
+RewriteRule ^application/(application-)?([^/]+)/?$ https://pink-project.github.io/application-$2/$2.html [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/?$ https://pink-project.github.io/application-$2/$2.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/turtle
+# Target: https://pink-project.github.io/domain-{DOMAIN}/{DOMAIN}.ttl
+RewriteRule ^domain/(domain-)?([^/]+)/turtle/?$ https://pink-project.github.io/domain-$2/$2.ttl [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/turtle/?$ https://pink-project.github.io/application-$2/$2.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/context
+# Target: https://pink-project.github.io/domain-{DOMAIN}/context/context.json
+RewriteRule ^domain/(domain-)?([^/]+)/context/?$ https://pink-project.github.io/domain-$2/context/context.json [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/context/?$ https://pink-project.github.io/application-$2/context/context.json [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/context/{CONTEXTNAME}
+# Target: https://pink-project.github.io/domain-{DOMAIN}/context/{CONTEXTNAME}.json
+RewriteRule ^domain/(domain-)?([^/]+)/context/([^/]+)/?$ https://pink-project.github.io/domain-$2/context/$3.json [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/context/([^/]+)/?$ https://pink-project.github.io/application-$2/context/$3.json [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/inferred
+# Target: https://pink-project.github.io/domain-{DOMAIN}/{DOMAIN}-inferred.ttl
+RewriteRule ^domain/(domain-)?([^/]+)/inferred/?$ https://pink-project.github.io/domain-$2/$2-inferred.ttl [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/inferred/?$ https://pink-project.github.io/application-$2/$2-inferred.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/dependencies
+# Target: https://pink-project.github.io/domain-{DOMAIN}/{DOMAIN}-dependencies.ttl
+RewriteRule ^domain/(domain-)?([^/]+)/dependencies/?$ https://pink-project.github.io/domain-$2/$2-dependencies.ttl [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/dependencies/?$ https://pink-project.github.io/application-$2/$2-dependencies.ttl [R=303,NE,L]
+
+## Redirections to GitHub repo, without version
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/source
+# Target: https://github.com/PINK-project/domain-{DOMAIN}/main/{DOMAIN}.ttl
+RewriteRule ^domain/(domain-)?([^/]+)/source/?$           https://raw.githubusercontent.com/pink-project/domain-$2/main/$2.ttl [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/source/?$ https://raw.githubusercontent.com/pink-project/application-$2/main/$2.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/domain/{DOMAIN}/{PATH}/{MODULE}
+# Target: https://github.com/PINK-project/domain-{DOMAIN}/main/{PATH}/{MODULE}
+RewriteRule ^domain/(domain-)?([^/]+)/([^0-9].*[^/])/?$           https://raw.githubusercontent.com/pink-project/domain-$2/main/$3.ttl [R=303,NE,L]
+RewriteRule ^application/(application-)?([^/]+)/([^0-9].*[^/])/?$ https://raw.githubusercontent.com/pink-project/application-$2/main/$3.ttl [R=303,NE,L]
+
+
+
+##########################################################################
+##  Redirections to the SSbD core ontology
+##########################################################################
+
+RewriteCond %{HTTP_ACCEPT} text/html
+RewriteRule ^([0-9][^/]*)/?$    https://pink-project.github.io/versions/$1/pink-annotation-schema.html [R=303,NE,L]
+RewriteRule ^([0-9][^/]*)/?$    https://pink-project.github.io/versions/$1/pink-annotation-schema.ttl [R=303,NE,L]
+
+## Redirections to GitHub Pages, with version
+
+# Source: https://w3id.org/ssbd/{VERSION}
+# Target from browser: https://pink-project.github.io/pink-annotation-schema/versions/{VERSION}/pink-annotation-schema.html
+# Target, otherwise:   https://pink-project.github.io/pink-annotation-schema/versions/{VERSION}/pink-annotation-schema.ttl
+RewriteCond %{HTTP_ACCEPT} text/html
+RewriteRule ^([0-9][^/]*)/?$    https://pink-project.github.io/pink-annotation-schema/versions/$1/pink-annotation-schema.html [R=303,NE,L]
+RewriteRule ^([0-9][^/]*)/?$    https://pink-project.github.io/pink-annotation-schema/versions/$1/pink-annotation-schema.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/{VERSION}/turtle
+# Target: https://pink-project.github.io/pink-annotation-schema/versions/{VERSION}/pink-annotation-schema.ttl
+RewriteRule ^([0-9][^/]*)/turtle/?$    https://pink-project.github.io/pink-annotation-schema/versions/$1/pink-annotation-schema.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/{VERSION}/context
+# Target: https://pink-project.github.io/pink-annotation-schema/versions/{VERSION}/context/context.json
+RewriteRule ^([0-9][^/]*)/context/?$    https://pink-project.github.io/pink-annotation-schema/versions/$1/context/context.json [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/{VERSION}/context/{CONTEXTNAME}
+# Target: https://pink-project.github.io/pink-annotation-schema/versions/{VERSION}/context/{CONTEXTNAME}.json
+RewriteRule ^([0-9][^/]*)/context/([^/]+)/?$    https://pink-project.github.io/pink-annotation-schema/versions/$1/context/$2.json [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/{VERSION}/inferred
+# Target: https://pink-project.github.io/pink-annotation-schema/versions/{VERSION}/pink-annotation-schema-inferred.ttl
+RewriteRule ^([0-9][^/]*)/inferred/?$    https://pink-project.github.io/pink-annotation-schema/versions/$1/pink-annotation-schema-inferred.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/{VERSION}/dependencies
+# Target: https://pink-project.github.io/pink-annotation-schema/versions/{VERSION}/pink-annotation-schema-dependencies.ttl
+RewriteRule ^([0-9][^/]*)/dependencies/?$    https://pink-project.github.io/pink-annotation-schema/versions/$1/pink-annotation-schema-dependencies.ttl [R=303,NE,L]
+
+
+## Redirections to GitHub repo, with version
+
+# Source: https://w3id.org/ssbd/{VERSION}/source
+# Target: https://github.com/PINK-project/pink-annotation-schema/{VERSION}/pink-annotation-schema.ttl
+RewriteRule ^([0-9][^/]*)/source/?$    https://raw.githubusercontent.com/pink-project/pink-annotation-schema/$1/pink-annotation-schema.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/{VERSION}/{PATH}/{MODULE}
+# Target: https://github.com/PINK-project/pink-annotation-schema/{VERSION}/{PATH}/{MODULE}
+RewriteRule ^([0-9][^/]*)/([^0-9].*[^/])/?$    https://raw.githubusercontent.com/pink-project/pink-annotation-schema/$1/$2.ttl [R=303,NE,L]
+
+## Redirections to GitHub Pages, without version
+
+# Source: https://w3id.org/ssbd
+# Target from browser: https://pink-project.github.io/pink-annotation-schema/pink-annotation-schema.html
+# Target, otherwise:   https://pink-project.github.io/pink-annotation-schema/pink-annotation-schema.ttl
+RewriteCond %{HTTP_ACCEPT} text/html
+RewriteRule ^?$    https://pink-project.github.io/pink-annotation-schema/pink-annotation-schema.html [R=303,NE,L]
+RewriteRule ^?$    https://pink-project.github.io/pink-annotation-schema/pink-annotation-schema.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/turtle
+# Target: https://pink-project.github.io/pink-annotation-schema/pink-annotation-schema.ttl
+RewriteRule ^turtle/?$    https://pink-project.github.io/pink-annotation-schema/pink-annotation-schema.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/context
+# Target: https://pink-project.github.io/pink-annotation-schema/context/context.json
+RewriteRule ^context/?$    https://pink-project.github.io/pink-annotation-schema/context/context.json [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/context/{CONTEXTNAME}
+# Target: https://pink-project.github.io/pink-annotation-schema/context/{CONTEXTNAME}.json
+RewriteRule ^context/([^/]+)/?$    https://pink-project.github.io/pink-annotation-schema/context/$1.json [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/inferred
+# Target: https://pink-project.github.io/pink-annotation-schema/pink-annotation-schema-inferred.ttl
+RewriteRule ^inferred/?$    https://pink-project.github.io/pink-annotation-schema/pink-annotation-schema-inferred.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/dependencies
+# Target: https://pink-project.github.io/pink-annotation-schema/pink-annotation-schema-dependencies.ttl
+RewriteRule ^dependencies/?$    https://pink-project.github.io/pink-annotation-schema/pink-annotation-schema-dependencies.ttl [R=303,NE,L]
+
+## Redirections to GitHub repo, without version
+
+# Source: https://w3id.org/ssbd/source
+# Target: https://github.com/PINK-project/pink-annotation-schema/main/pink-annotation-schema.ttl
+RewriteRule ^source/?$    https://raw.githubusercontent.com/pink-project/pink-annotation-schema/main/pink-annotation-schema.ttl [R=303,NE,L]
+
+# Source: https://w3id.org/ssbd/{PATH}/{MODULE}
+# Target: https://github.com/PINK-project/pink-annotation-schema/main/{PATH}/{MODULE}
+RewriteRule ^([^0-9].*[^/])/?$    https://raw.githubusercontent.com/pink-project/pink-annotation-schema/main/$1.ttl [R=303,NE,L]
